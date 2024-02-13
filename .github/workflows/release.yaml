@@ -57,16 +57,16 @@ jobs:
           targets: x86_64-apple-darwin
       - name: Build release for x86 Apple
         run: |
-          SDKROOT=$(xcrun -sdk macosx --show-sdk-path) cargo build --release --target=x86_64-apple-darwin
+          SDKROOT=$(xcrun -sdk macosx --show-sdk-path) cargo build --profile dist --target=x86_64-apple-darwin
       - name: Create Universal Binary
         run: |
-          lipo -create -output target/release/${{ env.GAME_EXECUTABLE_NAME }} target/aarch64-apple-darwin/release/${{ env.GAME_EXECUTABLE_NAME }} target/x86_64-apple-darwin/release/${{ env.GAME_EXECUTABLE_NAME }}
+          lipo -create -output target/dist/${{ env.GAME_EXECUTABLE_NAME }} target/aarch64-apple-darwin/dist/${{ env.GAME_EXECUTABLE_NAME }} target/x86_64-apple-darwin/dist/${{ env.GAME_EXECUTABLE_NAME }}
       - name: Create release
         run: |
           mkdir -p build/macos/src/Game.app/Contents/MacOS/assets
           cp -r assets/ build/macos/src/Game.app/Contents/MacOS/assets
           cp -r credits/ build/macos/src/Game.app/Contents/MacOS/credits
-          cp target/release/${{ env.GAME_EXECUTABLE_NAME }} build/macos/src/Game.app/Contents/MacOS/
+          cp target/dist/${{ env.GAME_EXECUTABLE_NAME }} build/macos/src/Game.app/Contents/MacOS/
           strip build/macos/src/Game.app/Contents/MacOS/${{ env.GAME_EXECUTABLE_NAME }}
           mv build/macos/src/Game.app build/macos/src/${{ env.GAME_OSX_APP_NAME }}.app
           ln -s /Applications build/macos/src/
